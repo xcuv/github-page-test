@@ -1,176 +1,238 @@
 <!DOCTYPE html>
 <html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>评论页面</title>
-    <style>
-        .comment-container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            font-family: "Microsoft YaHei", sans-serif;
-        }
-        .comment-list {
-            margin-top: 20px;
-        }
-        .comment-item {
-            background: #f5f5f5;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        .comment-author {
-            font-weight: bold;
-            color: #333;
-        }
-        .comment-time {
-            color: #999;
-            font-size: 0.9em;
-        }
-        .comment-content {
-            color: #666;
-            line-height: 1.6;
-        }
-        .loading {
-            text-align: center;
-            color: #666;
-            padding: 20px;
-        }
-    </style>
-</head>
-<body>
-    <div class="comment-container">
-        <h2>评论列表</h2>
-        <div class="comment-form">
-            <h3>发表评论</h3>
-            <div style="margin-bottom: 15px;">
-                <input type="text" id="authorInput" placeholder="请输入您的昵称" 
-                    style="width: 200px; padding: 8px; margin-bottom: 10px; display: block;">
-                <textarea id="commentInput" placeholder="请输入评论内容" 
-                    style="width: 100%; height: 100px; padding: 8px; margin-bottom: 10px;"></textarea>
-                <button onclick="submitComment()" 
-                    style="padding: 8px 20px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                    提交评论
-                </button>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>评论页面</title>
+        <style>
+            .comment-container {
+                max-width: 800px;
+                margin: 20px auto;
+                padding: 20px;
+                font-family: 'Microsoft YaHei', sans-serif;
+            }
+            .comment-list {
+                margin-top: 20px;
+            }
+            .comment-item {
+                background: #f5f5f5;
+                padding: 15px;
+                margin-bottom: 15px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .comment-header {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+            .comment-author {
+                font-weight: bold;
+                color: #333;
+            }
+            .comment-time {
+                color: #999;
+                font-size: 0.9em;
+            }
+            .comment-content {
+                color: #666;
+                line-height: 1.6;
+            }
+            .loading {
+                text-align: center;
+                color: #666;
+                padding: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="comment-container">
+            <h2>评论列表</h2>
+            <div class="comment-form">
+                <h3>发表评论</h3>
+                <div style="margin-bottom: 15px">
+                    <input
+                        type="text"
+                        id="authorInput"
+                        placeholder="请输入您的昵称"
+                        style="
+                            width: 200px;
+                            padding: 8px;
+                            margin-bottom: 10px;
+                            display: block;
+                        "
+                    />
+                    <textarea
+                        id="commentInput"
+                        placeholder="请输入评论内容"
+                        style="
+                            width: 100%;
+                            height: 100px;
+                            padding: 8px;
+                            margin-bottom: 10px;
+                        "
+                    ></textarea>
+                    <button
+                        onclick="submitComment()"
+                        style="
+                            padding: 8px 20px;
+                            background: #4caf50;
+                            color: white;
+                            border: none;
+                            border-radius: 4px;
+                            cursor: pointer;
+                        "
+                    >
+                        提交评论
+                    </button>
+                </div>
+            </div>
+            <div id="commentList" class="comment-list">
+                <div class="loading">加载中...</div>
             </div>
         </div>
-        <div id="commentList" class="comment-list">
-            <div class="loading">加载中...</div>
-        </div>
-    </div>
 
-    <script>
-        // 获取评论列表
-        function fetchComments() {
-            fetch('https://kvtest.660027.xyz/805910d0-f97d-4274-81d5-e995f197c368/remoteStorage?key=gh-comments')
-                .then(response => response.json())
-                .then(data => {
-                    displayComments(data || []);
-                })
-                .catch(error => {
-                    console.error('获取评论失败:', error);
-                    document.getElementById('commentList').innerHTML = '<p>加载评论失败，请稍后重试</p>';
-                });
-        }
-
-        // 提交评论
-        function submitComment() {
-            const author = document.getElementById('authorInput').value.trim();
-            const content = document.getElementById('commentInput').value.trim();
-            
-            if (!author) {
-                alert('请输入昵称');
-                return;
-            }
-            if (!content) {
-                alert('请输入评论内容');
-                return;
+        <script>
+            // 获取评论列表
+            function fetchComments() {
+                fetch(
+                    'https://kvtest.660027.xyz/805910d0-f97d-4274-81d5-e995f197c368/remoteStorage?key=gh-comments'
+                )
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log("🚀 ~ .then ~ data:", data)
+                        displayComments(data?.value || []);
+                    })
+                    .catch((error) => {
+                        console.error('获取评论失败:', error);
+                        document.getElementById('commentList').innerHTML =
+                            '<p>加载评论失败，请稍后重试</p>';
+                    });
             }
 
-            // 获取现有评论
-            fetch('https://kvtest.660027.xyz/805910d0-f97d-4274-81d5-e995f197c368/remoteStorage?key=gh-comments')
-                .then(response => response.json())
-                .then(existingComments => {
-                    const comments = existingComments || [];
-                    // 添加新评论
-                    const newComment = {
-                        author: author,
-                        content: content,
-                        time: new Date().toISOString()
-                    };
-                    comments.push(newComment);
+            // 提交评论
+            function submitComment() {
+                const author =
+                    document.getElementById('authorInput').value.trim() ||
+                    '匿名用户';
+                const content =
+                    document.getElementById('commentInput').value.trim() ||
+                    '测试评论';
 
-                    // 保存更新后的评论
-                    return fetch('https://kvtest.660027.xyz/805910d0-f97d-4274-81d5-e995f197c368/remoteStorage', {
+                // if (!author) {
+                //     alert('请输入昵称');
+                //     return;
+                // }
+                // if (!content) {
+                //     alert('请输入评论内容');
+                //     return;
+                // }
+
+                fetch(
+                    'https://kvtest.660027.xyz/805910d0-f97d-4274-81d5-e995f197c368/remoteStorage',
+                    {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
                             key: 'gh-comments',
-                            value: comments
-                        })
-                    });
-                })
-                .then(response => {
-                    if (response.ok) {
-                        // 清空输入框
-                        document.getElementById('authorInput').value = '';
-                        document.getElementById('commentInput').value = '';
-                        // 重新加载评论列表
-                        fetchComments();
-                    } else {
-                        throw new Error('提交失败');
+                            value: [
+                                {
+                                    author,
+                                    content,
+                                    time: new Date().toISOString(),
+                                },
+                            ],
+                        }),
                     }
-                })
-                .catch(error => {
-                    console.error('提交评论失败:', error);
-                    alert('提交评论失败，请稍后重试');
-                });
-        }
+                )
+                    .then((response) => response.json())
+                    .then(() => ({ok:true}))
+                    // .then((existingComments) => {
+                    //     const comments = existingComments || [];
+                    //     // 添加新评论
+                    //     const newComment = {
+                    //         author: author,
+                    //         content: content,
+                    //         time: new Date().toISOString(),
+                    //     };
+                    //     comments.push(newComment);
 
-        // 显示评论
-        function displayComments(comments) {
-            const commentList = document.getElementById('commentList');
-            if (!comments || comments.length === 0) {
-                commentList.innerHTML = '<p>暂无评论</p>';
-                return;
+                    //     // 保存更新后的评论
+                    //     return fetch(
+                    //         'https://kvtest.660027.xyz/805910d0-f97d-4274-81d5-e995f197c368/remoteStorage',
+                    //         {
+                    //             method: 'POST',
+                    //             headers: {
+                    //                 'Content-Type': 'application/json',
+                    //             },
+                    //             body: JSON.stringify({
+                    //                 key: 'gh-comments',
+                    //                 value: comments,
+                    //             }),
+                    //         }
+                    //     );
+                    // })
+                    .then((response) => {
+                        if (response.ok) {
+                            // 清空输入框
+                            document.getElementById('authorInput').value = '';
+                            document.getElementById('commentInput').value = '';
+                            // 重新加载评论列表
+                            fetchComments();
+                        } else {
+                            throw new Error('提交失败');
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('提交评论失败:', error);
+                        alert('提交评论失败，请稍后重试');
+                    });
             }
 
-            const commentsHtml = comments.map(comment => `
+            // 显示评论
+            function displayComments(comments) {
+                const commentList = document.getElementById('commentList');
+                if (!comments || comments.length === 0) {
+                    commentList.innerHTML = '<p>暂无评论</p>';
+                    return;
+                }
+
+                const commentsHtml = comments
+                    .map(
+                        (comment) => `
                 <div class="comment-item">
                     <div class="comment-header">
                         <span class="comment-author">${comment.author}</span>
-                        <span class="comment-time">${formatDate(comment.time)}</span>
+                        <span class="comment-time">${formatDate(
+                            comment.time
+                        )}</span>
                     </div>
                     <div class="comment-content">${comment.content}</div>
                 </div>
-            `).join('');
+            `
+                    )
+                    .join('');
 
-            commentList.innerHTML = commentsHtml;
-        }
+                commentList.innerHTML = commentsHtml;
+            }
 
-        // 格式化日期
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleString('zh-CN', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        }
+            // 格式化日期
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            }
 
-        // 页面加载完成后获取评论
-        window.addEventListener('load', fetchComments);
-    </script>
-</body>
+            // 页面加载完成后获取评论
+            window.addEventListener('load', fetchComments);
+        </script>
+    </body>
 </html>
